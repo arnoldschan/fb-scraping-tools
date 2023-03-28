@@ -30,7 +30,8 @@ class Downloader:
                 response = requests.get(
                     url=url, headers=headers,
                     allow_redirects=True, timeout=timeout_secs)
-
+                with open('requests.html', 'w') as file:
+                    file.write(response.text)
                 # Treat temporary server errors as timeout so that
                 # retries are performed
                 if response.status_code == 503:

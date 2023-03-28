@@ -1,7 +1,7 @@
 from core import common
 from core import model
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, NavigableString
 from collections import namedtuple
 from collections import OrderedDict
 from datetime import datetime
@@ -662,7 +662,7 @@ Love" href="/link1">10</a>
         ...         <a href="/link2">React</a>
         ...       </span>
         ...       <a href="/link3">12 Comments</a>
-        ...       <a href="https://mbasic.facebook.com/fu">Full Story</a>
+        ...       <a href="https://m.facebook.com/fu">Full Story</a>
         ...     </div>
         ...   </article>''', 'lxml'))
         OrderedDict([('post_id', 151), \
@@ -673,7 +673,7 @@ User 3 - Some more Location.'), \
 ('date', '2008-05-13 10:02:00'), \
 ('date_org', '13 May 2008 at 10:02'), ('like_count', 10), \
 ('comment_count', 12), \
-('story_link', 'https://mbasic.facebook.com/fu')])
+('story_link', 'https://m.facebook.com/fu')])
 
         >>> FacebookSoupParser().parse_post(BeautifulSoup('''
         ...     <article>
@@ -743,11 +743,10 @@ Like, Love and Wow" href="/link1">114,721</a>
                 link_soup = child.find_all(href=re.compile("^/.*"))
                 for link in link_soup:
                     link_found = link.attrs["href"][1:]
-                    if "browse/users/?ids=" in link_found:
-                        link_found = link_found.split("browse/users/?ids=")[1]
-                        link_found = link_found.split("&")[0]
-                        ids = link_found.split("%2C")
-                        participants_found += ids
+                    if "/profile.php" in link_found:
+                        link_found = link_found.split("/profile.php?id=")[1]
+                        ids = link_found.split("&")[0]
+                        participants_found.append(ids)
                     else:
                         id_found = link_found.split("&refid=18")[0]
                         id_found = id_found.split("?refid=18")[0]
@@ -755,9 +754,9 @@ Like, Love and Wow" href="/link1">114,721</a>
                         id_found = id_found.split("&fref")[0]
                         id_found = id_found.split("&lst")[0]
                         if id_found != link_found and \
-                           id_found not in participants_found and \
-                           '/photos/' not in id_found and \
-                           'story.php?' not in id_found:
+                            id_found not in participants_found and \
+                            '/photos/' not in id_found and \
+                            'story.php?' not in id_found:
                             participants_found.append(id_found)
 
                 sub_content = []
@@ -781,6 +780,38 @@ Like, Love and Wow" href="/link1">114,721</a>
             logging.info("Skipping article - no link for likes found.")
             return None
         article_id = int(re.findall(r'\d+', span_tag.attrs["id"])[0])
+        h3_element = soup.find('h3')
+        withs = []
+        location = {}
+        with_exist = False
+        location_exist = False
+        for child in h3_element.children:
+            if child.name == "span": # no additional info
+                break
+            
+                
+            if with_exist == True:
+                if child.name == "a":
+                    with_element = child
+                else:
+                    with_element = child.find('a')
+                with_name = with_element.text
+                with_url = with_element.attrs['href'].split('&')[0]
+                withs.append({'name': with_name, 'url': with_url})
+                with_exist = False
+            if location_exist == True:
+                location['name'] = child.find('a').text
+                location['url'] = child.find('a').attrs['href'].split('&')[0]
+                location_exist = False
+            if isinstance(child, NavigableString):
+                text = child
+            else:
+                text = child.text
+            if "with" in (text.strip().lower().split(" ")) or ("and" in text.strip().lower().split(" ")):
+                with_exist = True
+            if "at" in text.strip().lower().split(" "):
+                location_exist = True
+
 
         like_count = 0
         reaction_link = span_tag.find(
@@ -801,6 +832,7 @@ Like, Love and Wow" href="/link1">114,721</a>
 
         return OrderedDict([
             ("post_id", article_id), ("content", content_string),
+            ("location", location),
             ("participants", participants_found),
             ("date", date), ("date_org", date_org),
             ("like_count", like_count), ("comment_count", comment_count),

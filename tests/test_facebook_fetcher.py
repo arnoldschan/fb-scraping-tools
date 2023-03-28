@@ -97,7 +97,7 @@ def test_fetch_lat_returns_empty_buddy_list_when_fb_parser_raises():
 
 def test_fetch_user_friend_list_works():
 
-    expected_url = "https://mbasic.facebook.com/profile.php?v=friends&id=123"
+    expected_url = "https://m.facebook.com/profile.php?v=friends&id=123"
 
     expected_friend_list = OrderedDict(
         [
@@ -146,7 +146,7 @@ def test_fetch_user_friend_list_works():
 def test_fetch_liked_pages_works():
 
     expected_url = \
-        "https://mbasic.facebook.com/profile.php?v=likes&id=111"
+        "https://m.facebook.com/profile.php?v=likes&id=111"
     expected_liked_pages = OrderedDict(
         [
             ('Music', OrderedDict([('musicLink1/', 'Music 1')]))
@@ -187,8 +187,8 @@ def test_fetch_content_recursively_stops_when_all_links_explored():
 
     expected_urls = [
         "initialUrl",
-        "https://mbasic.facebook.com/showMoreLink2",
-        "https://mbasic.facebook.com/showMoreLink1"
+        "https://m.facebook.com/showMoreLink2",
+        "https://m.facebook.com/showMoreLink1"
     ]
 
     expected_content = OrderedDict(
@@ -273,8 +273,8 @@ def test_fetch_content_recursively_is_resilient_to_downloader_exception():
 
     expected_urls = [
         "initialUrl",
-        "https://mbasic.facebook.com/showMoreLink2",
-        "https://mbasic.facebook.com/showMoreLink1"
+        "https://m.facebook.com/showMoreLink2",
+        "https://m.facebook.com/showMoreLink1"
     ]
 
     expected_content = OrderedDict(
@@ -344,8 +344,8 @@ def test_fetch_content_recursively_is_resilient_to_parser_exceptions():
 
     expected_urls = [
         "initialUrl",
-        "https://mbasic.facebook.com/showMoreLink2",
-        "https://mbasic.facebook.com/showMoreLink1"
+        "https://m.facebook.com/showMoreLink2",
+        "https://m.facebook.com/showMoreLink1"
     ]
 
     expected_content = OrderedDict(
@@ -417,8 +417,8 @@ def test_fetch_content_recursively_is_resilient_to_parser_error():
 
     expected_urls = [
         "initialUrl",
-        "https://mbasic.facebook.com/showMoreLink2",
-        "https://mbasic.facebook.com/showMoreLink1"
+        "https://m.facebook.com/showMoreLink2",
+        "https://m.facebook.com/showMoreLink1"
     ]
 
     expected_content = OrderedDict(
@@ -491,13 +491,13 @@ def test_fetch_user_infos_handles_ids_and_usernames():
     user_ids = [110, '111', 'profile.php?id=123', 'paul']
 
     expected_url_user_110 = \
-        "https://mbasic.facebook.com/profile.php?v=info&id=110"
+        "https://m.facebook.com/profile.php?v=info&id=110"
     expected_url_user_111 = \
-        "https://mbasic.facebook.com/profile.php?v=info&id=111"
+        "https://m.facebook.com/profile.php?v=info&id=111"
     expected_url_user_123 = \
-        "https://mbasic.facebook.com/profile.php?v=info&id=123"
+        "https://m.facebook.com/profile.php?v=info&id=123"
     expected_url_user_paul = \
-        "https://mbasic.facebook.com/paul/about"
+        "https://m.facebook.com/paul/about"
 
     fake_infos_user_110 = OrderedDict(
         [('id', 110), ('Name', 'Mark')])
@@ -566,9 +566,9 @@ def test_fetch_user_infos_can_fetch_mutual_friends():
     user_ids = [110]
 
     expected_about_page_url = \
-        "https://mbasic.facebook.com/profile.php?v=info&id=110"
+        "https://m.facebook.com/profile.php?v=info&id=110"
     expected_mutual_friends_url = \
-        "https://mbasic.facebook.com/profile.php?v=friends&mutual=1&\
+        "https://m.facebook.com/profile.php?v=friends&mutual=1&\
 lst=123:110:1&id=110"
 
     fake_mutual_friends = OrderedDict([
@@ -637,9 +637,9 @@ def test_fetch_user_infos_can_fetch_likes():
     user_ids = [110]
 
     expected_about_page_url = \
-        "https://mbasic.facebook.com/profile.php?v=info&id=110"
+        "https://m.facebook.com/profile.php?v=info&id=110"
     expected_likes_url = \
-        "https://mbasic.facebook.com/profile.php?v=likes&id=110"
+        "https://m.facebook.com/profile.php?v=likes&id=110"
 
     fake_user_infos = OrderedDict(
         [('id', 110), ('Name', 'Mark')])
@@ -703,9 +703,9 @@ def test_fetch_user_infos_can_fetch_likes():
 def test_fetch_user_infos_is_resilient_to_downloader_exception():
 
     expected_url_user_110 = \
-        "https://mbasic.facebook.com/profile.php?v=info&id=110"
+        "https://m.facebook.com/profile.php?v=info&id=110"
     expected_url_user_111 = \
-        "https://mbasic.facebook.com/profile.php?v=info&id=111"
+        "https://m.facebook.com/profile.php?v=info&id=111"
 
     fake_infos_user_110 = OrderedDict(
         [('id', 110)])
@@ -748,9 +748,9 @@ def test_fetch_user_infos_is_resilient_to_downloader_exception():
 def test_fetch_user_infos_is_resilient_to_fb_parser_exception():
 
     expected_url_user_110 = \
-        "https://mbasic.facebook.com/profile.php?v=info&id=110"
+        "https://m.facebook.com/profile.php?v=info&id=110"
     expected_url_user_111 = \
-        "https://mbasic.facebook.com/profile.php?v=info&id=111"
+        "https://m.facebook.com/profile.php?v=info&id=111"
 
     fake_infos_user_110 = OrderedDict(
         [('id', 110)])
@@ -799,9 +799,9 @@ def test_fetch_user_infos_is_resilient_to_fb_parser_exception():
 def test_fetch_user_infos_is_resilient_to_fb_parser_failure():
 
     expected_url_user_110 = \
-        "https://mbasic.facebook.com/profile.php?v=info&id=110"
+        "https://m.facebook.com/profile.php?v=info&id=110"
     expected_url_user_111 = \
-        "https://mbasic.facebook.com/profile.php?v=info&id=111"
+        "https://m.facebook.com/profile.php?v=info&id=111"
 
     fake_infos_user_110 = OrderedDict(
         [('id', 110)])
@@ -851,13 +851,13 @@ def test_fetch_articles_from_timelines_visits_all_links():
 
     expected_urls = \
         [
-            "https://mbasic.facebook.com/mark?v=timeline",
-            "https://mbasic.facebook.com/ShowMoreFromMainPage-Link1",
-            "https://mbasic.facebook.com/ShowMoreFromMainPage-Link2",
-            "https://mbasic.facebook.com/Link1FromMainPage",
-            "https://mbasic.facebook.com/ShowMoreFromLink1-1",
-            "https://mbasic.facebook.com/ShowMoreFromLink1-2",
-            "https://mbasic.facebook.com/Link2FromMainPage"
+            "https://m.facebook.com/mark?v=timeline",
+            "https://m.facebook.com/ShowMoreFromMainPage-Link1",
+            "https://m.facebook.com/ShowMoreFromMainPage-Link2",
+            "https://m.facebook.com/Link1FromMainPage",
+            "https://m.facebook.com/ShowMoreFromLink1-1",
+            "https://m.facebook.com/ShowMoreFromLink1-2",
+            "https://m.facebook.com/Link2FromMainPage"
         ]
     expected_results = OrderedDict([
         ("mark", OrderedDict([
@@ -870,8 +870,8 @@ def test_fetch_articles_from_timelines_visits_all_links():
                 (600, OrderedDict([("someData", "6"), ('page', 'mark')])),
                 (700, OrderedDict([("someData", "7"), ('page', 'mark')])),
                 (800, OrderedDict([("someData", "8"), ('page', 'mark')]))
-                ]))
             ]))
+        ]))
     ])
 
     with create_mock_downloader() as mock_downloader:
@@ -942,26 +942,26 @@ def test_fetch_articles_from_timelines_visits_all_links():
                 "mainPage")
             mock_fb_parser.parse_timeline_page.assert_has_calls(
                 [call("mainPage")] + [
-                        call(
-                            fake_return_value.text
-                        ) for i in range(0, len(expected_urls) - 1)
-                    ])
+                    call(
+                        fake_return_value.text
+                    ) for i in range(0, len(expected_urls) - 1)
+                ])
 
 
 def test_fetch_articles_from_timelines_is_resilient_to_fb_parser_failure():
 
     expected_urls = \
         [
-            "https://mbasic.facebook.com/mark?v=timeline",
-            "https://mbasic.facebook.com/Link1FromMainPage",
-            "https://mbasic.facebook.com/Link2FromMainPage"
+            "https://m.facebook.com/mark?v=timeline",
+            "https://m.facebook.com/Link1FromMainPage",
+            "https://m.facebook.com/Link2FromMainPage"
         ]
     expected_results = OrderedDict([
         ("mark", OrderedDict([
             ("posts", OrderedDict([
                 (300, OrderedDict([("someData", "3"), ('page', 'mark')]))
-                ]))
             ]))
+        ]))
     ])
 
     with create_mock_downloader() as mock_downloader:
@@ -1003,16 +1003,16 @@ def test_fetch_articles_from_timelines_is_resilient_to_fb_parser_failure():
                 "mainPage")
             mock_fb_parser.parse_timeline_page.assert_has_calls(
                 [call("mainPage")] + [
-                        call(
-                            fake_return_value.text
-                        ) for i in range(0, len(expected_urls) - 1)
-                    ])
+                    call(
+                        fake_return_value.text
+                    ) for i in range(0, len(expected_urls) - 1)
+                ])
 
 
 def test_fetch_likers_for_article():
 
     expected_url = \
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" + \
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" + \
         "limit=500&total_count=1000000&ft_ent_identifier=100"
 
     expected_likers = set(["username1", "username2"])
@@ -1052,12 +1052,12 @@ def test_fetch_likers_for_article():
 def test_fetch_likers_for_article_continue_until_no_show_more_links():
 
     expected_urls = [
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&total_count=1000000&ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&shown_ids=1111%2C2222&total_count=4&" +
         "ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&shown_ids=1111%2C2222%2C3333%2C4444&total_count=4&" +
         "ft_ent_identifier=100",
     ]
@@ -1080,13 +1080,13 @@ def test_fetch_likers_for_article_continue_until_no_show_more_links():
                     ReactionResult(
                         likers=["1111", "2222"],
                         see_more_link="/ufi/" +
-                                      "reaction/profile/browser/fetch/?" +
+                                      "reaction/profile/browser/?" +
                                       "limit=10&shown_ids=1111%2C2222&" +
                                       "total_count=4&ft_ent_identifier=100"),
                     ReactionResult(
                         likers=["3333", "4444"],
                         see_more_link="/ufi/" +
-                                      "reaction/profile/browser/fetch/?" +
+                                      "reaction/profile/browser/?" +
                                       "limit=10&shown_ids=1111%2C2222" +
                                       "%2C3333%2C4444&" +
                                       "total_count=4&ft_ent_identifier=100"),
@@ -1112,15 +1112,15 @@ def test_fetch_likers_for_article_continue_until_no_show_more_links():
 def test_fetch_likers_for_article_retries_5_times_while_decreasing_max_likes():
 
     expected_urls = [
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&total_count=1000000&ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=250&total_count=1000000&ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=166&total_count=1000000&ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=125&total_count=1000000&ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=100&total_count=1000000&ft_ent_identifier=100"
     ]
 
@@ -1151,15 +1151,15 @@ def test_fetch_likers_for_article_retries_5_times_while_decreasing_max_likes():
 def test_fetch_likers_for_article_with_success_on_last_retry():
 
     expected_urls = [
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&total_count=1000000&ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=250&total_count=1000000&ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=166&total_count=1000000&ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=125&total_count=1000000&ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=100&total_count=1000000&ft_ent_identifier=100"
     ]
 
@@ -1201,21 +1201,21 @@ def test_fetch_likers_for_article_with_success_on_last_retry():
 def test_fetch_likers_for_article_with_show_more_links_and_failure():
 
     expected_urls = [
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&total_count=1000000&ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&shown_ids=1111%2C2222&total_count=4&" +
         "ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=250&shown_ids=1111%2C2222&total_count=4&" +
         "ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=166&shown_ids=1111%2C2222&total_count=4&" +
         "ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=125&shown_ids=1111%2C2222&total_count=4&" +
         "ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=100&shown_ids=1111%2C2222&total_count=4&" +
         "ft_ent_identifier=100",
     ]
@@ -1239,7 +1239,7 @@ def test_fetch_likers_for_article_with_show_more_links_and_failure():
                     ReactionResult(
                         likers=["1111", "2222"],
                         see_more_link="/ufi/" +
-                                      "reaction/profile/browser/fetch/?" +
+                                      "reaction/profile/browser/?" +
                                       "limit=10&shown_ids=1111%2C2222&" +
                                       "total_count=4&ft_ent_identifier=100")
                 ]
@@ -1261,7 +1261,7 @@ def test_fetch_likers_for_article_with_show_more_links_and_failure():
 def test_fetch_likers_for_article_with_invalid_see_more_link():
 
     expected_urls = [
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&total_count=1000000&ft_ent_identifier=100"
     ]
 
@@ -1285,7 +1285,7 @@ def test_fetch_likers_for_article_with_invalid_see_more_link():
                         # Limit=666 is invalid as limit=10 is
                         # hardcoded in FacebookFetcher
                         see_more_link="/ufi/" +
-                                      "reaction/profile/browser/fetch/?" +
+                                      "reaction/profile/browser/?" +
                                       "limit=666&shown_ids=1111%2C2222&" +
                                       "total_count=4&ft_ent_identifier=100")
                 ]
@@ -1307,9 +1307,9 @@ def test_fetch_likers_for_article_with_invalid_see_more_link():
 def test_fetch_likers_for_article_with_parser_exception():
 
     expected_urls = [
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&total_count=1000000&ft_ent_identifier=100",
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&shown_ids=1111%2C2222&total_count=4&" +
         "ft_ent_identifier=100"
     ]
@@ -1332,7 +1332,7 @@ def test_fetch_likers_for_article_with_parser_exception():
                     ReactionResult(
                         likers=["1111", "2222"],
                         see_more_link="/ufi/" +
-                                      "reaction/profile/browser/fetch/?" +
+                                      "reaction/profile/browser/?" +
                                       "limit=10&shown_ids=1111%2C2222&" +
                                       "total_count=4&ft_ent_identifier=100"),
                     RuntimeError("Boom")
@@ -1365,13 +1365,13 @@ def test_fetch_reactions_per_user_for_articles():
     ]
 
     expected_urls = [
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&total_count=1000000&ft_ent_identifier=100",
 
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&total_count=1000000&ft_ent_identifier=200",
 
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&total_count=1000000&ft_ent_identifier=300"
     ]
 
@@ -1447,7 +1447,7 @@ def test_fetch_reactions_per_user_for_articles_can_exclude_non_users():
     ]
 
     expected_urls = [
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" +
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" +
         "limit=500&total_count=1000000&ft_ent_identifier=100"
     ]
 

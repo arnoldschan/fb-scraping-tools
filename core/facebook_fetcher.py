@@ -7,6 +7,8 @@ from collections import OrderedDict
 from collections import deque
 import logging
 import re
+import time
+import json
 
 
 def create_production_fetcher(config):
@@ -39,87 +41,89 @@ sticky_pool=lla1c22_chat-proxy&state=active'
 def build_about_page_url_from_id(user_id):
     """
     >>> build_about_page_url_from_id(123)
-    'https://mbasic.facebook.com/profile.php?v=info&id=123'
+    'https://m.facebook.com/profile.php?v=info&id=123'
     """
-    return "https://mbasic.facebook.com/profile.php?v=info&id={0}". \
+    return "https://m.facebook.com/profile.php?v=info&id={0}". \
         format(user_id)
 
 
 def build_about_page_url_from_username(username):
     """
     >>> build_about_page_url_from_username("username")
-    'https://mbasic.facebook.com/username/about'
+    'https://m.facebook.com/username/about'
     """
-    return "https://mbasic.facebook.com/{0}/about". \
+    return "https://m.facebook.com/{0}/about". \
         format(username)
 
 
 def build_friends_page_from_id(user_id):
     """
     >>> build_friends_page_from_id(123)
-    'https://mbasic.facebook.com/profile.php?v=friends&id=123'
+    'https://m.facebook.com/profile.php?v=friends&id=123'
     """
-    return "https://mbasic.facebook.com/profile.php?v=friends&" + \
+    return "https://m.facebook.com/profile.php?v=friends&" + \
            "id={0}".format(user_id)
 
 
 def build_likes_page_from_id(user_id):
     """
     >>> build_likes_page_from_id(123)
-    'https://mbasic.facebook.com/profile.php?v=likes&id=123'
+    'https://m.facebook.com/profile.php?v=likes&id=123'
     """
-    return "https://mbasic.facebook.com/profile.php?v=likes&" + \
+    return "https://m.facebook.com/profile.php?v=likes&" + \
            "id={0}".format(user_id)
 
 
 def build_mutual_friends_page_url_from_id(c_user, user_id):
     """
     >>> build_mutual_friends_page_url_from_id(123, 456)
-    'https://mbasic.facebook.com/profile.php?v=friends&mutual=1&\
+    'https://m.facebook.com/profile.php?v=friends&mutual=1&\
 lst=123:456:1&id=456'
     """
-    return "https://mbasic.facebook.com/profile.php?v=friends&mutual=1&" + \
+    return "https://m.facebook.com/profile.php?v=friends&mutual=1&" + \
         "lst={0}:{1}:{2}&id={1}".format(c_user, user_id, 1)
 
 
 def build_timeline_page_url_from_username(username):
     """
     >>> build_timeline_page_url_from_username("username")
-    'https://mbasic.facebook.com/username?v=timeline'
+    'https://m.facebook.com/username?v=timeline'
     """
-    return "https://mbasic.facebook.com/{0}?v=timeline". \
+    return "https://m.facebook.com/{0}?v=timeline". \
         format(username)
 
 
 def build_timeline_page_url_from_id(id):
     """
     >>> build_timeline_page_url_from_id(123)
-    'https://mbasic.facebook.com/profile.php?id=123&v=timeline'
+    'https://m.facebook.com/profile.php?id=123&v=timeline'
     """
-    return "https://mbasic.facebook.com/profile.php?id={0}&v=timeline". \
+    return "https://m.facebook.com/profile.php?id={0}&v=timeline". \
         format(id)
 
 
 def build_reaction_page_url(article_id, max_total_likes):
     """
     >>> build_reaction_page_url(123, 5000000)
-    'https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?\
+    'https://m.facebook.com/ufi/reaction/profile/browser/?\
 limit={0}&total_count=5000000&ft_ent_identifier=123'
     """
     # Not replacing limit={0} on purpose
+    # https://m.facebook.com/ufi/reaction/profile/browser/?ft_ent_identifier=532467984899593&av=100055331526049&ext=1650683952&hash=AeTOOkx4c0o0cWypmCg&refid=52&_ft_=mf_story_key.532467984899593%3Atop_level_post_id.532467984899593%3Atl_objid.532467984899593%3Acontent_owner_id_new.100044091893135%3Aoriginal_content_id.382825577184746%3Aoriginal_content_owner_id.100063719204148%3Athrowback_story_fbid.532467984899593%3Apage_id.72447883975%3Astory_location.4%3Aattached_story_attachment_style.album%3Aott.AX_bgyELBVW97TRp%3Aapp_id.6628568379%3Aattached_story_type.EntStatusCreationStory%3Aattached_story_attachment_type.PhotoSetAttachment%3Apage_insights.%7B%22100044091893135%22%3A%7B%22page_id%22%3A100044091893135%2C%22page_id_type%22%3A%22page%22%2C%22actor_id%22%3A100044091893135%2C%22dm%22%3A%7B%22isShare%22%3A1%2C%22originalPostOwnerID%22%3A382825577184746%7D%2C%22psn%22%3A%22EntStatusCreationStory%22%2C%22post_context%22%3A%7B%22object_fbtype%22%3A266%2C%22publish_time%22%3A1648805930%2C%22story_name%22%3A%22EntStatusCreationStory%22%2C%22story_fbid%22%3A%5B532467984899593%5D%7D%2C%22role%22%3A1%2C%22sl%22%3A4%2C%22targets%22%3A%5B%7B%22actor_id%22%3A100044091893135%2C%22page_id%22%3A100044091893135%2C%22post_id%22%3A532467984899593%2C%22role%22%3A1%2C%22share_id%22%3A0%7D%5D%7D%2C%22100063719204148%22%3A%7B%22page_id%22%3A100063719204148%2C%22page_id_type%22%3A%22page%22%2C%22actor_id%22%3A100044091893135%2C%22attached_story%22%3A%7B%22page_id%22%3A100063719204148%2C%22page_id_type%22%3A%22page%22%2C%22actor_id%22%3A100063719204148%2C%22dm%22%3A%7B%22isShare%22%3A0%2C%22originalPostOwnerID%22%3A0%7D%2C%22psn%22%3A%22EntStatusCreationStory%22%2C%22post_context%22%3A%7B%22object_fbtype%22%3A266%2C%22publish_time%22%3A1648805487%2C%22story_name%22%3A%22EntStatusCreationStory%22%2C%22story_fbid%22%3A%5B382825577184746%5D%7D%2C%22role%22%3A1%2C%22sl%22%3A4%7D%2C%22dm%22%3A%7B%22isShare%22%3A0%2C%22originalPostOwnerID%22%3A0%7D%2C%22psn%22%3A%22EntStatusCreationStory%22%2C%22role%22%3A1%2C%22sl%22%3A4%2C%22targets%22%3A%5B%7B%22actor_id%22%3A100044091893135%2C%22page_id%22%3A100063719204148%2C%22post_id%22%3A382825577184746%2C%22role%22%3A1%2C%22share_id%22%3A0%7D%5D%7D%7D%3Aprofile_id.100044091893135%3Aprofile_relationship_type.6%3Aactrs.100044091893135%3Atds_flgs.3%3Athid.100044091893135%3Aftmd_400706.111111l
+    # https://m.facebook.com/ufi/reaction/profile/browser/?ft_ent_identifier=532467984899593&hash=AeTOOkx4c0o0cWypmCg&refid=52&total_count=10000
+    # "limit={0}" + \
+    # "&total_count={0}&".format(max_total_likes) + \
     return \
-        "https://mbasic.facebook.com/ufi/reaction/profile/browser/fetch/?" + \
-        "limit={0}" + \
-        "&total_count={0}&".format(max_total_likes) + \
+        "https://m.facebook.com/ufi/reaction/profile/browser/?" + \
         "ft_ent_identifier={0}".format(article_id)
 
 
 def build_relative_url(relative_url):
     """
     >>> build_relative_url("/relative")
-    'https://mbasic.facebook.com/relative'
+    'https://m.facebook.com/relative'
     """
-    return "https://mbasic.facebook.com{0}". \
+    return "https://m.facebook.com{0}". \
         format(relative_url)
 
 
@@ -426,7 +430,8 @@ class FacebookFetcher:
                     response = self.downloader.fetch_url(
                         cookie=self.cookie, url=url,
                         timeout_secs=15, retries=5)
-
+                    with open(f'htmls/response_{user_ref}_{links_explored}.html', 'w') as file:
+                        file.write(response.text)
                     if links_explored == 0:
                         links = \
                             self.fb_parser.parse_timeline_years_links(
@@ -438,6 +443,7 @@ class FacebookFetcher:
                         links_to_explore.extend(full_links)
 
                     result = self.fb_parser.parse_timeline_page(response.text)
+                    
                     if not result:
                         raise RuntimeError(
                             "Failed to parse timeline - no result")
@@ -457,9 +463,14 @@ class FacebookFetcher:
                     logging.error(
                         "Error while downloading page '{0}', "
                         "got exception: '{1}'".format(url, e))
+                    raise e
 
                 links_explored += 1
-
+                if links_explored == 6:
+                    break
+                time.sleep(60)
+            with open(f'results/result_{user_ref}.json', 'w') as file:
+                        file.write(json.dumps(articles_found[user_ref]["posts"]))
         return articles_found
 
     def fetch_likers_for_article(self, article_id):
@@ -473,6 +484,7 @@ class FacebookFetcher:
         links_to_explore = [build_reaction_page_url(
             article_id=article_id,
             max_total_likes=1000000)]
+        print('linkss to exploreee:', links_to_explore)
         links_explored = 1
         nb_like_found = 0
 
@@ -503,13 +515,13 @@ class FacebookFetcher:
             if not succeeded:
                 logging.error(
                     "Failed to fetch all reactions for post '{0}'".format(
-                            article_id))
+                        article_id))
                 break
 
             try:
 
                 result = self.fb_parser.parse_reaction_page(
-                        response.text)
+                    response.text)
                 if not result:
                     raise RuntimeError(
                         "Failed to fetch reactions - no result")
@@ -523,7 +535,8 @@ class FacebookFetcher:
 
                 likers.update(result.likers)
 
-                see_more_link = result.see_more_link
+                see_more_link = result.see_more_link.replace(
+                    'reaction_type=0', 'reaction_type=')
                 if see_more_link:
                     see_more_link = build_relative_url(
                         see_more_link)
@@ -547,6 +560,9 @@ class FacebookFetcher:
                         common.truncate_text(url, 200), e))
 
             links_explored += 1
+            import json
+            with open('likers.json', 'a') as file:
+                file.write(json.dumps(result.likers))
 
         return likers
 
@@ -562,8 +578,8 @@ class FacebookFetcher:
         reactions_per_user = OrderedDict()
 
         logging.info(
-                "Fetching reactions for {0} articles".format(
-                    len(articles)))
+            "Fetching reactions for {0} articles".format(
+                len(articles)))
 
         for articles_processed, article in enumerate(articles):
 
